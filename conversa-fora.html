@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conversa fora: treino de conversas do dia a dia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F1EA; --card:#FFFDF9; --ink:#2B2A33; --soft:#6B6875; --line:#E4DCCF;
+  --go:#256F69; --go-bg:#E0F0EC; --mid:#9A6412; --mid-bg:#FBEFD6; --stop:#9C4553; --stop-bg:#F8E4E6;
+  --me:#33415C; --accent:#256F69;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{font-family:"Nunito Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+h1,h2,.serif{font-family:"Fraunces",Georgia,serif;font-weight:600}
+#app{max-width:520px;margin:0 auto}
+.hidden{display:none!important}
+
+/* topo */
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px}
+.icon-btn{min-width:44px;height:44px;border-radius:22px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:0 12px;font-size:14px;font-weight:600;gap:6px}
+.icon-btn svg{width:20px;height:20px}
+
+/* início */
+#home{padding:0 16px 24px}
+#home h1{font-size:34px;line-height:1.1;margin:8px 0 10px}
+#home p.lead{color:var(--soft);margin-bottom:18px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:5px 10px;border-radius:999px}
+.tag.go{background:var(--go-bg);color:var(--go)}
+.tag.mid{background:var(--mid-bg);color:var(--mid)}
+.tag.stop{background:var(--stop-bg);color:var(--stop)}
+.scene-card{width:100%;display:flex;align-items:center;gap:14px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;min-height:88px}
+.scene-card:active{transform:scale(.99)}
+.scene-card .who{font-weight:700;font-size:17px}
+.scene-card .where{color:var(--soft);font-size:14px}
+.avatar{flex:0 0 auto;width:56px;height:56px;border-radius:50%;overflow:hidden}
+.avatar svg{width:100%;height:100%;display:block}
+.avatar.sm{width:34px;height:34px}
+.meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin-top:8px}
+.meter i{display:block;height:100%;width:0;background:var(--accent);border-radius:4px;transition:width .5s ease}
+.meter-label{font-size:12px;color:var(--soft);margin-top:4px}
+.note{font-size:13px;color:var(--soft);border-top:1px solid var(--line);padding-top:14px;margin-top:18px}
+.note p+p{margin-top:8px}
+
+/* cena */
+#play{display:flex;flex-direction:column}
+.scene-head{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 12px 10px}
+.scene-head .row{display:flex;align-items:center;gap:10px}
+.scene-head .name{font-weight:700;line-height:1.2}
+.scene-head .place{font-size:13px;color:var(--soft)}
+.scene-head .grow{flex:1;min-width:0}
+#chat{min-height:220px;padding:14px 12px 8px;display:flex;flex-direction:column;gap:10px}
+.setting{align-self:center;text-align:center;font-size:13px;color:var(--soft);max-width:90%;padding:4px 0 6px}
+.msg{display:flex;gap:8px;align-items:flex-end;max-width:88%;animation:rise .25s ease}
+.msg .bubble{background:var(--card);border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:10px 14px}
+.msg.me{align-self:flex-end}
+.msg.me .bubble{background:var(--me);color:#fff;border-color:var(--me);border-radius:18px 18px 6px 18px}
+.bubble.act{font-style:italic;opacity:.85}
+.typing .bubble{display:flex;gap:4px;padding:14px}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--soft);animation:blink 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+.fb{align-self:stretch;border-radius:16px;padding:12px 14px;animation:rise .3s ease;border:1px solid transparent}
+.fb.go{background:var(--go-bg);border-color:#BFDDD6}
+.fb.mid{background:var(--mid-bg);border-color:#EED9AC}
+.fb.stop{background:var(--stop-bg);border-color:#EBC6CB}
+.fb .tag{padding:0;background:none;margin-bottom:4px;font-size:14px}
+.fb p{font-size:15px}
+.narr{align-self:stretch;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:16px;line-height:1.5;color:#4A4753;padding:4px 6px 4px 14px;border-left:3px solid var(--line);animation:rise .3s ease}
+.narr.think{font-size:15px;color:var(--soft)}
+.chapter{align-self:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);font-weight:700;padding-top:2px}
+.story{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:17px;line-height:1.5;color:#4A4753;margin:6px 0 4px}
+.story+.story{margin-top:12px}
+.retry-mark{align-self:center;font-size:12px;color:var(--soft);letter-spacing:.04em;text-transform:uppercase}
+#panel{position:sticky;bottom:0;background:linear-gradient(to bottom,rgba(246,241,234,0),var(--bg) 14px);padding:18px 12px 16px;display:flex;flex-direction:column;gap:8px}
+.hint{font-size:13px;color:var(--soft);text-align:center}
+.opt{width:100%;text-align:left;background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:12px 14px;min-height:48px;font-weight:600}
+.opt:active{background:#F1EADF}
+.opt.act{font-style:italic;font-weight:400}
+.opt[disabled]{opacity:.4;border-style:dashed;cursor:default}
+.btn{width:100%;min-height:48px;border-radius:14px;font-weight:700;padding:12px 14px;background:var(--ink);color:#fff}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn-row{display:flex;gap:8px}
+
+/* fim */
+#end{padding:8px 16px 28px}
+#end h2{font-size:26px;line-height:1.15;margin:10px 0 6px}
+#end .sub{color:var(--soft);margin-bottom:16px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.box h3{font-size:15px;margin-bottom:8px}
+.box ul{list-style:none}
+.box li{padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.box li:first-child{border-top:0;padding-top:0}
+.box li small{display:block;color:var(--soft);font-size:13px;margin-top:2px}
+.counts{display:flex;gap:8px;flex-wrap:wrap}
+
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- INÍCIO -->
+  <section id="home">
+    <div class="top">
+      <span class="serif" style="font-size:15px;color:var(--soft)">Protótipo</span>
+      <button class="icon-btn" id="soundBtn" aria-pressed="true"></button>
+    </div>
+    <h1>Conversa fora</h1>
+    <p class="story">Domingo à noite. Você repassa a semana que vem e sente o aperto de sempre: copa, sala de aula, elevador, festa, almoço de família.</p>
+    <p class="story">Desta vez você se promete uma coisa pequena: ficar em cada conversa um pouco mais do que a vontade de sair.</p>
+    <p class="lead" style="margin-top:14px">Uma semana em cinco capítulos. Em cada fala você escolhe o que responder e vê o que acontece do outro lado. Dá para tentar outra frase quantas vezes quiser.</p>
+    <button class="btn" id="storyBtn" style="margin-bottom:16px"></button>
+    <div class="legend" aria-label="Legenda">
+      <span class="tag go">▲ Andou</span>
+      <span class="tag mid">● Ficou morna</span>
+      <span class="tag stop">■ Travou</span>
+    </div>
+    <div id="sceneList"></div>
+    <div class="note">
+      <p>Em um dos capítulos a outra pessoa não está disponível, por melhor que seja a sua frase. Conversa depende de dois.</p>
+      <p>Aqui ninguém perde. A barra de conexão só sobe, e uma frase que trava serve para enxergar o que aconteceu.</p>
+      <p>Este jogo é um treino e não substitui a terapia. As frases que pesarem mais valem ser levadas para a sessão.</p>
+      <p>Baseado em princípios da terapia do esquema (Jeffrey Young). Versão de 16/11/2026.</p>
+    </div>
+  </section>
+
+  <!-- CENA -->
+  <section id="play" class="hidden">
+    <div class="scene-head">
+      <div class="row">
+        <button class="icon-btn" id="backBtn" aria-label="Voltar para o início">←</button>
+        <div class="avatar sm" id="headAvatar"></div>
+        <div class="grow">
+          <div class="name" id="headName"></div>
+          <div class="place" id="headPlace"></div>
+        </div>
+        <button class="icon-btn" id="soundBtn2" aria-pressed="true"></button>
+      </div>
+      <div class="meter" role="progressbar" aria-label="Conexão" aria-valuemin="0" aria-valuemax="6" id="meterBar"><i id="meterFill"></i></div>
+      <div class="meter-label" id="meterLabel">Conexão</div>
+    </div>
+    <div id="chat" aria-live="polite"></div>
+    <div id="panel"></div>
+  </section>
+
+  <!-- FIM DA CENA -->
+  <section id="end" class="hidden"></section>
+</div>
+
+<script>
+/* ---------- Conteúdo ---------- */
+// k: "go" (andou), "mid" (ficou morna), "stop" (travou)
+const SCENES = [
+{
+  id:"trabalho", name:"Marina", role:"Colega de trabalho", place:"Na copa, esperando o café",
+  setting:"Segunda de manhã. Você entra na copa e Marina está esperando a máquina de café.",
+  voice:{f:520,type:"triangle"},
+  avatar:{skin:"#E8B796",hair:"#5B3A29",shirt:"#D9774A",style:"long"},
+  turns:[
+   {say:"Oi! Esse café tá demorando hoje, né? Segunda-feira pede dois.",
+    opts:[
+     {k:"go",t:"Pede mesmo, eu já tô no segundo. Como foi seu fim de semana?",
+      r:"Foi ótimo! Deixa eu te contar.",
+      fb:"Você concordou, contou uma coisinha sua e devolveu uma pergunta. Ela ganhou assunto para continuar."},
+     {k:"mid",t:"É, tá demorando.",
+      r:"Pois é...",
+      fb:"Concordar mantém o clima, só que não deixa nada para ela pegar. Um detalhe seu ou uma pergunta daria o próximo passo."},
+     {k:"stop",t:"Desculpa, eu não sirvo pra conversa de manhã.",
+      r:"Ah, imagina! Tranquilo.",
+      fb:"Quando a gente se desculpa antes de falar, a outra pessoa passa a cuidar da gente e o assunto some. Ela só queria comentar o café. Você não precisava se explicar."}
+    ]},
+   {say:"Fui numa feira de plantas e voltei com três vasos que não cabem no apartamento. E você, fez o quê no fim de semana?",
+    opts:[
+     {k:"stop",t:"Nada de mais.",
+      r:"Ah, entendi. Descansar também é bom.",
+      fb:"\"Nada de mais\" costuma sair quando a gente acha que a própria vida não interessa. Para quem ouve, soa como porta fechada. Qualquer detalhe pequeno serve: uma série, um almoço, o sofá."},
+     {k:"go",t:"Fiquei em casa, maratonei uma série e fiz um macarrão que deu errado. Três vasos? Quais plantas?",
+      r:"Hahaha, macarrão dá errado como? Uma jiboia, uma samambaia e uma que eu nem sei o nome.",
+      fb:"Um fim de semana comum virou assunto porque você deu detalhes. O macarrão que deu errado aproxima mais do que uma história perfeita, e a pergunta sobre os vasos mostrou que você ouviu."},
+     {k:"mid",t:"Fiquei em casa. E as plantas, ainda estão vivas?",
+      r:"Por enquanto sim! Vamos ver até sexta.",
+      fb:"A pergunta funcionou, ela respondeu animada. Sobre você, ela ficou sem saber quase nada. Um detalhe a mais deixa a conversa com dois lados."}
+    ]},
+   {say:"Aliás, vai ter bolo de aniversário do Renato às quatro, na sala do fundo. Você vem?",
+    opts:[
+     {k:"mid",t:"Vou tentar passar lá.",
+      r:"Boa, te vejo lá então.",
+      fb:"Resposta simpática, e a conversa terminou bem. Se quiser esticar, uma pergunta curta sobre o bolo ou sobre o Renato já basta."},
+     {k:"stop",t:"Acho que não, ninguém vai sentir minha falta.",
+      r:"Que isso... eu ia gostar que você fosse.",
+      fb:"Essa frase vem de uma voz dura que você conhece bem. Ela fala como se fosse fato, e Marina acabou de te convidar. O convite é a informação mais concreta que você tem agora."},
+     {k:"go",t:"Vou sim. Eu nunca sei o que falar nessas horas, mas bolo eu não recuso. Sabe de que sabor é?",
+      r:"Somos dois, eu fico perto da mesa do bolo e pronto. Acho que é de cenoura.",
+      fb:"Você disse que fica sem jeito, num tom leve e sem pedir desculpa. Isso costuma aproximar: muita gente sente o mesmo e quase ninguém fala."}
+    ]}
+  ]
+},
+{
+  id:"festa", name:"Caio", role:"Amigo de um amigo", place:"No aniversário do Dudu",
+  setting:"Aniversário do Dudu. Você está perto da mesa de salgados quando alguém que você não conhece chega do seu lado.",
+  voice:{f:300,type:"sine"},
+  avatar:{skin:"#B98463",hair:"#1F1B1A",shirt:"#3D6FA8",style:"short"},
+  turns:[
+   {say:"E aí! Você conhece o Dudu de onde? Acho que a gente ainda não se falou.",
+    opts:[
+     {k:"mid",t:"Da faculdade.",
+      r:"Ah, legal. Eu sou do futebol.",
+      fb:"Resposta certa, e curta demais para ele continuar. Quem pergunta \"de onde\" quer um pedacinho de história. Uma frase a mais resolve."},
+     {k:"go",t:"Da faculdade. A gente fazia trabalho junto e ele sempre chegava atrasado. E você, conhece ele de onde?",
+      r:"Hahaha, continua igual! Eu conheço do futebol.",
+      fb:"Você respondeu, acrescentou uma lembrança e devolveu a pergunta. A lembrança deu a ele algo para rir e comentar."},
+     {k:"stop",t:"De lugar nenhum importante. Já tô quase indo embora.",
+      r:"Ah... tá, beleza.",
+      fb:"A vontade de sair cedo protege do desconforto e também tira a chance de a conversa dar certo. Ele veio falar com você por curiosidade. Dá para ficar mais dois minutos e ver o que acontece."}
+    ]},
+   {say:"Eu jogo com ele toda quarta. Sou ruim, vou mais pela resenha depois. Você pratica alguma coisa?",
+    opts:[
+     {k:"stop",t:"Não, sou um desastre em qualquer esporte, nem adianta.",
+      r:"Ah, que nada...",
+      fb:"Ele também disse que é ruim, e disse rindo. A diferença está no tom: ele contou um fato engraçado, e a sua frase soou como sentença. Dá para dizer a mesma coisa com leveza."},
+     {k:"mid",t:"Não muito. Mas legal que você joga.",
+      r:"É, é bom pra desestressar.",
+      fb:"Um elogio simpático. Ficou faltando um gancho, algo seu ou uma pergunta. Ele tinha deixado a \"resenha\" ali, pronta para ser puxada."},
+     {k:"go",t:"Esporte não é comigo, eu sou do time que caminha ouvindo podcast. Como é essa resenha depois do jogo?",
+      r:"É a melhor parte: pastel e meia hora discutindo um gol que ninguém fez. Que podcast você ouve?",
+      fb:"Você contou do que gosta e perguntou sobre o que ele claramente adora. Ele já devolveu com outra pergunta."}
+    ]},
+   {say:"(Fica um silêncio. Caio olha para o copo.)",
+    opts:[
+     {k:"go",t:"Silêncio de festa, né. Você já provou aquela torta de frango? Tô em dúvida se vale a fila.",
+      r:"Vale muito. Vem, eu te mostro onde tá menos cheio.",
+      fb:"Silêncio aparece em toda conversa, inclusive nas boas. Você nomeou com humor e puxou um assunto que estava na frente dos dois. O que está no ambiente sempre serve."},
+     {k:"stop",t:"Desculpa, eu não tenho graça nenhuma. Pode ir falar com os outros.",
+      r:"Não, imagina, não é isso...",
+      fb:"O silêncio durou alguns segundos e a voz crítica já deu o veredito. Caio também estava procurando assunto, o silêncio era dos dois. Você não tem que entreter ninguém, só continuar ali."},
+     {k:"mid",t:"(Você espera ele falar alguma coisa.)",
+      r:"Então... vou pegar mais uma bebida. Quer alguma coisa?",
+      fb:"Esperar também é uma opção, e ele retomou. Só que a conversa ficou toda na mão dele. Um comentário sobre a comida ou a música divide esse peso."}
+    ]}
+  ]
+},
+{
+  id:"vizinha", name:"Bia", role:"Vizinha nova", place:"No elevador do prédio",
+  setting:"Você entra no elevador. Uma moça segurando uma caixa de mudança sorri para você.",
+  voice:{f:660,type:"sine"},
+  avatar:{skin:"#8C5A3C",hair:"#2A1D17",shirt:"#7A5BA8",style:"curly"},
+  turns:[
+   {say:"Oi! Acabei de me mudar pro 302. Você mora aqui faz tempo?",
+    opts:[
+     {k:"stop",t:"(Você faz que sim com a cabeça e olha o celular.)",
+      r:"(Bia fica olhando os números do elevador.)",
+      fb:"O celular é um abrigo rápido quando bate o desconforto. De fora parece desinteresse, e ela não tem como saber o que você está sentindo. Uma frase curta já mudaria a leitura dela."},
+     {k:"go",t:"Uns três anos, no 204. Seja bem-vinda! Já descobriu a padaria da esquina?",
+      r:"Ainda não! É boa?",
+      fb:"Boas-vindas, uma informação sua e uma dica em forma de pergunta. Para quem acabou de chegar, isso vale muito."},
+     {k:"mid",t:"Faz uns três anos.",
+      r:"Ah, que bom. Então você conhece tudo por aqui.",
+      fb:"Você respondeu o que ela perguntou. Ela continuou porque quer conhecer os vizinhos. Um \"bem-vinda\" ou uma dica do bairro mostraria que você também quer conversa."}
+    ]},
+   {say:"Tô vivendo de biscoito desde sábado, a cozinha ainda é só caixa. Tem algum lugar bom pra comer aqui perto?",
+    opts:[
+     {k:"mid",t:"Tem um por quilo na rua de trás.",
+      r:"Ótimo, vou procurar. Obrigada!",
+      fb:"Dica útil, e ela agradeceu. A conversa fechou porque não sobrou nada em aberto. Uma pergunta sobre a mudança deixaria a porta encostada."},
+     {k:"stop",t:"Não sei, eu quase não saio de casa.",
+      r:"Ah... entendi.",
+      fb:"Pode até ser verdade, e dita assim encerra o assunto. Você conhece o bairro mais do que ela: o mercado, a farmácia, o caminho mais curto. Qualquer uma dessas coisas já é uma resposta."},
+     {k:"go",t:"Tem um restaurante por quilo na rua de trás que salva meu almoço. Mudança é um caos, né? Veio de longe?",
+      r:"Vai salvar o meu também! Vim de Goiânia, pelo trabalho.",
+      fb:"Você deu a dica com um toque pessoal e mostrou interesse pela história dela. Agora cada um sabe um pouco do outro."}
+    ]},
+   {say:"Não conheço ninguém na cidade ainda. Bom, pelo menos já conheço alguém do prédio!",
+    opts:[
+     {k:"go",t:"Conhece mesmo. Se precisar de alguma coisa, é só bater no 204. Eu sou de falar pouco, mas atendo a porta.",
+      r:"Hahaha, combinado. E eu aviso quando a cozinha funcionar.",
+      fb:"Você se ofereceu do seu jeito, sem fingir ser outra pessoa. Dizer que fala pouco, com um sorriso, é uma forma de se apresentar."},
+     {k:"stop",t:"Você vai conhecer gente melhor, eu não sou boa companhia.",
+      r:"Nossa, por que você diz isso?",
+      fb:"Ela acabou de dizer que ficou contente em te conhecer. A frase respondeu a uma crítica que só existe dentro da sua cabeça. Receber o comentário com um \"que bom\" já é suficiente."},
+     {k:"mid",t:"Pois é. Boa mudança pra você!",
+      r:"Obrigada! Até mais.",
+      fb:"Um fecho gentil. Ela tinha feito um pequeno convite ao dizer que já conhece alguém do prédio. Dá para aceitar com um \"se precisar, estou no 204\"."}
+    ]}
+  ]
+},
+{
+  id:"familia", name:"Tio Jorge", role:"Tio", place:"No almoço de domingo",
+  setting:"Almoço de domingo na casa da sua mãe. Você senta e o tio Jorge puxa a cadeira do lado.",
+  voice:{f:190,type:"sawtooth"},
+  avatar:{skin:"#D9A27E",hair:"#B9B4AE",shirt:"#4E7A4B",style:"bald"},
+  turns:[
+   {say:"Olha quem apareceu! E aí, como é que tá a vida? Trabalhando muito?",
+    opts:[
+     {k:"stop",t:"Trabalhando, mas nada que valha a pena contar.",
+      r:"Ah, deve ter alguma coisa...",
+      fb:"Quem decide se vale a pena ouvir é quem perguntou, e ele perguntou. A régua que mede sua vida como \"pouca coisa\" é mais exigente com você do que com qualquer outra pessoa da mesa."},
+     {k:"mid",t:"Tudo bem, tudo na mesma.",
+      r:"Que bom, que bom. Na mesma é melhor que piorando, né.",
+      fb:"\"Tudo na mesma\" é a resposta de segurança em almoço de família. Protege de perguntas e também deixa o tio sem saber nada de você. Uma coisa pequena da semana já muda o rumo."},
+     {k:"go",t:"Bastante, tio. A semana foi puxada, mas terminei um projeto que tava me tirando o sono. E o senhor, como tá o joelho?",
+      r:"Melhorou! Depois quero saber desse projeto.",
+      fb:"Você contou algo real, com o lado difícil e o lado bom, e lembrou de uma coisa dele. Lembrar do joelho diz ao tio que você presta atenção nele."}
+    ]},
+   {say:"Voltei pra caminhada, devagarinho. E me conta, e os namoros?",
+    opts:[
+     {k:"go",t:"Ih, tio, essa pasta tá em análise. Mas me conta da caminhada, o senhor tá indo onde?",
+      r:"Hahaha, em análise! Tô indo na praça, toda manhã, com o seu Antônio.",
+      fb:"Pergunta incômoda aparece em toda família. Você colocou um limite com humor e ofereceu outro assunto no lugar. Dá para se proteger sem sair da conversa."},
+     {k:"stop",t:"(Você levanta e vai ajudar na cozinha.)",
+      r:"(Tio Jorge fica olhando para o prato.)",
+      fb:"Sair da mesa resolve o aperto na hora. O custo é que o tio fica sem entender e você fica com a sensação de que não cabe ali. Um \"prefiro não falar disso\" dito sentado também é um limite."},
+     {k:"mid",t:"Nada de novo.",
+      r:"Tá bom, tá bom, não pergunto mais.",
+      fb:"Resposta curta que encerra o tema, e tudo bem não querer falar disso. Faltou oferecer outro assunto, para a conversa não acabar junto com a pergunta."}
+    ]},
+   {say:"Sabe que você sempre foi de falar pouco? Desde criança.",
+    opts:[
+     {k:"mid",t:"É, sempre fui.",
+      r:"Puxou sua avó. Ela também era assim.",
+      fb:"Você concordou sem se defender, e isso já é bastante. O tio seguiu sozinho. Se der vontade, pergunte da avó: ele abriu essa porta."},
+     {k:"go",t:"Sempre fui. Eu gosto mais de ouvir, e essa família fala por dez. Como eu era quando criança?",
+      r:"Você ficava num canto desenhando e de repente soltava uma frase que fazia todo mundo rir.",
+      fb:"Você recebeu o comentário como uma descrição e respondeu de igual para igual. A pergunta ainda trouxe uma lembrança boa, que talvez você nem tivesse."},
+     {k:"stop",t:"Eu sei, tem alguma coisa errada comigo.",
+      r:"Ninguém falou isso...",
+      fb:"Ele disse \"falar pouco\" e o que chegou em você foi \"tem algo errado comigo\". Essa tradução é antiga e automática. Falar pouco é um jeito de ser, e gente de falar pouco também pertence à mesa."}
+    ]}
+  ]
+},
+{
+  id:"renan", name:"Renan", role:"Colega de curso", place:"Na sala, antes da aula",
+  setting:"Você chega cedo na sala do curso. Só tem um colega, Renan, sentado na fileira do lado, mexendo no celular.",
+  voice:{f:240,type:"triangle"},
+  avatar:{skin:"#C99874",hair:"#3A2A20",shirt:"#55606E",style:"short"},
+  meter:"Sua parte",
+  labels:{go:"▲ Boa frase, pouca resposta"},
+  endTitle:"A conversa foi curta, e isso não dependia de você.",
+  endSub:"Renan tinha dormido três horas e acabado de receber uma mensagem difícil. Com as mesmas frases, em outro dia, a conversa teria sido outra.",
+  endBox:{h:"O que esta cena mostra",items:[
+    ["Conversa depende de duas pessoas","Uma boa frase aumenta a chance de a conversa andar. Ela não garante nada."],
+    ["Sinais de que a pessoa não está disponível","Respostas de uma palavra, olhar no celular, fones de ouvido. Eles falam do momento dela."],
+    ["A barra desta cena mede só a sua parte","O resultado da conversa ficou de fora porque não estava na sua mão."],
+    ["Encerrar bem também é saber conversar","Respeitar o sinal e deixar a porta aberta, como em \"se quiser, tô por aqui\"."]
+  ]},
+  turns:[
+   {say:"(Renan levanta os olhos por um segundo e volta para o celular.)",
+    opts:[
+     {k:"mid",t:"Oi.",
+      r:"Oi.",
+      fb:"Um oi já é presença, e ele respondeu no mesmo tamanho. Com alguém fechado assim, dá para testar uma pergunta e ver se há espaço."},
+     {k:"go",t:"Oi, Renan! Chegou cedo hoje também. Conseguiu terminar o exercício da semana?",
+      r:"Oi. Terminei.",
+      fb:"Cumprimento, comentário e pergunta: a frase estava boa. A resposta curta fala do momento dele. Você ainda não sabe o que está acontecendo do lado de lá."},
+     {k:"stop",t:"(Você senta longe e finge que não viu.)",
+      r:"(Renan continua no celular.)",
+      fb:"Evitar poupa o risco de uma resposta fria. Também deixa a dúvida no ar, e a voz crítica costuma preencher essa dúvida contra você. Um oi custaria pouco e traria uma informação real."}
+    ]},
+   {say:"(Ele digita alguma coisa, suspira e guarda o celular virado para baixo.)",
+    opts:[
+     {k:"go",t:"Eu travei na última questão e fiquei uma hora nela. Você achou difícil?",
+      r:"Mais ou menos.",
+      fb:"Você contou uma dificuldade sua e pediu a opinião dele. É o tipo de frase que costuma abrir conversa. Hoje não abriu, e isso diz algo sobre o Renan de hoje."},
+     {k:"stop",t:"Desculpa, tô te atrapalhando. Esquece.",
+      r:"Não, tudo bem.",
+      fb:"A frieza dele virou, na sua cabeça, \"estou incomodando\". Ele não disse isso. Quando a outra pessoa está fechada, o silêncio dela fala dela."},
+     {k:"go",t:"Tá tudo bem?",
+      r:"Tá, tá. Só cansado.",
+      fb:"Você percebeu o suspiro e perguntou, com atenção e gentileza. Ele deu um sinal: está cansado. Uma pergunta gentil às vezes recebe uma resposta curta."}
+    ]},
+   {say:"(Renan põe os fones de ouvido.)",
+    opts:[
+     {k:"stop",t:"(Você pensa: eu sabia, ninguém quer falar comigo.)",
+      r:"(Renan nem percebe. Está de olhos fechados, ouvindo música.)",
+      fb:"Uma pessoa, num dia ruim, virou \"ninguém\" e \"nunca\". Esse salto é rápido e antigo. O que aconteceu aqui cabe numa frase menor: hoje o Renan não estava disponível."},
+     {k:"mid",t:"(Você pega o caderno e revisa a matéria.)",
+      r:"(Os dois ficam em silêncio até a aula começar.)",
+      fb:"Respeitar os fones é uma leitura correta do momento. A cena ficou sem fecho, e isso deixa espaço para a dúvida. Uma frase curta de despedida fecha a conversa por você."},
+     {k:"go",t:"Vou deixar você quieto. Se quiser comparar as respostas depois, tô por aqui.",
+      r:"Valeu. Hoje não tô legal, não é com você.",
+      fb:"Você leu o sinal, respeitou e deixou a porta aberta. Encerrar bem também é uma habilidade de conversa. E ele confirmou: não era com você."}
+    ]}
+  ]
+}];
+
+/* ---------- Narrativa: uma semana, cinco capítulos ---------- */
+const STORY = {
+ trabalho:{day:"Segunda",
+  intro:"Segunda, 8h40. A copa está vazia, e você quase comemora. Aí a porta abre e entra a Marina, do financeiro. O coração acelera um pouco. Ela sorri e para ao lado da máquina de café.",
+  think:["Uma parte de você já procura a saída. Outra lembra da promessa de domingo.",
+         "Ela perguntou de você. A cabeça responde rápido: meu fim de semana não interessa a ninguém.",
+         "Bolo significa gente em pé, conversando em roda. O estômago aperta."],
+  hi:"Você volta para a mesa com o café. A conversa durou três minutos e você ainda está pensando na planta sem nome.",
+  lo:"Você volta para a mesa com o café e a sensação conhecida de ter dito pouco. Mesmo assim, ficou na copa até o fim. Amanhã tem curso."},
+ renan:{day:"Terça",
+  intro:"Terça, 18h50. Curso de inglês à noite. Você chega cedo, ainda com a conversa da copa na cabeça, e decide tentar de novo. Na sala só tem o Renan, na fileira do lado, mexendo no celular.",
+  think:["Ele mal olhou. A voz conhecida aproveita: viu só, ele não quer papo com você.",
+         "Dá para ver que alguma coisa pesa nele. A voz insiste que o problema é você.",
+         "Fones de ouvido. O recado parece claro, e dói um pouco."],
+  hi:"A aula começa. Você fez o que estava ao seu alcance e a conversa não aconteceu. As duas coisas são verdade ao mesmo tempo. No intervalo, Renan passa por você e faz um aceno com a cabeça.",
+  lo:"A aula começa. A conversa não aconteceu, e hoje ela não ia acontecer com frase nenhuma. No intervalo, Renan passa por você e faz um aceno com a cabeça."},
+ vizinha:{day:"Quinta",
+  intro:"Quinta, 19h15. Você chega do trabalho pensando no Renan e na vontade de largar a promessa. A porta do elevador já está fechando quando alguém segura: uma moça com uma caixa de mudança nos braços.",
+  think:["Elevador: quarenta segundos sem ter para onde ir.",
+         "Ela continua falando com você. Parece que quer mesmo conversar.",
+         "\"Não conheço ninguém.\" Você conhece essa frase por dentro."],
+  hi:"O elevador para no segundo andar. Você sai e escuta um \"até mais!\" animado. Pela primeira vez na semana, alguém ficou sabendo onde te encontrar.",
+  lo:"O elevador para no segundo andar e você sai. Ela ainda vai morar no 302 amanhã. Outros elevadores virão."},
+ festa:{day:"Sábado",
+  intro:"Sábado, 21h. Aniversário do Dudu. Você pensou em três desculpas para não vir e veio mesmo assim. Faz dez minutos que está perto da mesa de salgados, segurando um copo, quando alguém que você não conhece para do seu lado.",
+  think:["Ele puxou assunto primeiro. Metade do trabalho já está feita.",
+         "Ele acabou de dizer que é ruim no futebol, rindo. Você repara que dá para falar de um defeito assim.",
+         "Três segundos de silêncio parecem trinta. A voz já começa: você estragou tudo."],
+  hi:"Você vai embora quase à meia-noite, mais tarde do que planejava. No caminho percebe que passou um bom tempo sem vigiar cada palavra que dizia.",
+  lo:"Você vai embora cedo. No caminho lembra que, no começo da semana, nem teria vindo."},
+ familia:{day:"Domingo",
+  intro:"Domingo, 13h. Almoço na casa da sua mãe, a mesa cheia e barulhenta. É onde você deveria se sentir em casa, e é onde a sensação de estar de fora mais aperta. O tio Jorge puxa a cadeira do seu lado.",
+  think:["Pergunta de tio. A resposta automática já está na ponta da língua.",
+         "Pronto, a pergunta que você temia. A cadeira parece ter ficado menor.",
+         "\"Falar pouco.\" Na sua cabeça, a frase já está virando outra coisa."],
+  hi:"Na hora do café, o tio ainda conta das suas frases de criança e a mesa inteira ri junto. Você ri também.",
+  lo:"A mesa segue barulhenta. Você falou pouco e continuou ali, no seu lugar, até o café."}
+};
+const ORDER = ["trabalho","renan","vizinha","festa","familia"];
+SCENES.sort((a,b)=>ORDER.indexOf(a.id)-ORDER.indexOf(b.id));
+SCENES.forEach(s=>Object.assign(s,STORY[s.id]));
+const EPILOGUE = ["Domingo à noite, de novo. Uma semana, cinco conversas. Algumas andaram, uma não tinha como andar, e em todas você ficou um pouco mais do que a vontade de sair pedia.",
+ "Você continua sendo de falar pouco. Agora tem algumas frases no bolso, e sabe que um silêncio, uma resposta curta ou um par de fones não decidem quem você é.",
+ "Amanhã é segunda. A máquina de café continua lenta."];
+
+const KIND = {
+  go:{label:"▲ Andou",pts:2},
+  mid:{label:"● Ficou morna",pts:1},
+  stop:{label:"■ Travou",pts:0}
+};
+
+/* ---------- Estado ---------- */
+const $ = id => document.getElementById(id);
+let cur = null;           // {s, t, best:[], tried:Set, picks:[]}
+let soundOn = true;
+let best = {};            // melhor conexão por cena (0 a 6)
+try{ best = JSON.parse(localStorage.getItem("conversafora.best")||"{}")||{}; }catch(e){ best = {}; }
+function saveBest(){ try{ localStorage.setItem("conversafora.best",JSON.stringify(best)); }catch(e){} }
+
+/* ---------- Som (Web Audio, sem arquivos) ---------- */
+let ctx = null;
+function audio(){
+  if(!soundOn) return null;
+  try{
+    if(!ctx){ const AC = window.AudioContext||window.webkitAudioContext; if(!AC) return null; ctx = new AC(); }
+    if(ctx.state==="suspended") ctx.resume();
+    return ctx;
+  }catch(e){ return null; }
+}
+function tone(freq,start,dur,type,vol){
+  const c = audio(); if(!c) return;
+  try{
+    const o = c.createOscillator(), g = c.createGain(), t0 = c.currentTime+start;
+    o.type = type||"sine"; o.frequency.setValueAtTime(freq,t0);
+    g.gain.setValueAtTime(0.0001,t0);
+    g.gain.exponentialRampToValueAtTime(vol||0.12,t0+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0+dur+0.02);
+  }catch(e){}
+}
+// cada personagem tem um timbre e uma altura de voz
+function voice(v,text){
+  const n = Math.min(6,Math.max(2,Math.round(text.length/18)));
+  const vol = v.type==="sawtooth"?0.045:0.09;
+  for(let i=0;i<n;i++){
+    const wob = 1+((text.charCodeAt(i*3%text.length)%7)-3)*0.03;
+    tone(v.f*wob,i*0.085,0.07,v.type,vol);
+  }
+}
+const sfx = {
+  tap:()=>tone(880,0,0.04,"sine",0.05),
+  go:()=>{tone(523,0,0.16,"sine",0.11);tone(659,0.11,0.16,"sine",0.11);tone(784,0.22,0.28,"sine",0.11);},
+  mid:()=>{tone(440,0,0.2,"sine",0.09);tone(494,0.14,0.24,"sine",0.08);},
+  stop:()=>{tone(294,0,0.38,"sine",0.09);},
+  end:()=>{[523,659,784,1047].forEach((f,i)=>tone(f,i*0.12,0.3,"triangle",0.09));}
+};
+const ICON_ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M18.5 6.5a8 8 0 0 1 0 11"/></svg>';
+const ICON_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>';
+function paintSound(){
+  ["soundBtn","soundBtn2"].forEach(id=>{
+    const b=$(id); b.innerHTML=(soundOn?ICON_ON:ICON_OFF)+(id==="soundBtn"?"<span>"+(soundOn?"Som ligado":"Som desligado")+"</span>":"");
+    b.setAttribute("aria-pressed",String(soundOn));
+    b.setAttribute("aria-label",soundOn?"Desligar som":"Ligar som");
+  });
+}
+function toggleSound(){ soundOn=!soundOn; paintSound(); if(soundOn) sfx.tap(); }
+
+/* ---------- Avatares em SVG ---------- */
+function avatar(a){
+  const hair = {
+    long:`<path d="M12 34c0-16 8-24 20-24s20 8 20 24v18H44V30H20v22H12z" fill="${a.hair}"/>`,
+    short:`<path d="M15 28c0-12 7-18 17-18s17 6 17 18c-5-6-12-8-17-8s-12 2-17 8z" fill="${a.hair}"/>`,
+    curly:`<g fill="${a.hair}"><circle cx="18" cy="24" r="9"/><circle cx="28" cy="15" r="9"/><circle cx="40" cy="16" r="9"/><circle cx="47" cy="26" r="8"/><circle cx="14" cy="35" r="7"/><circle cx="50" cy="36" r="7"/></g>`,
+    bald:`<path d="M14 32c1-4 3-6 5-6v8zM50 32c-1-4-3-6-5-6v8z" fill="${a.hair}"/><path d="M25 43q7 4 14 0v3q-7 4-14 0z" fill="${a.hair}"/>`
+  }[a.style];
+  const back = a.style==="long"||a.style==="curly";
+  return `<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#EFE6D8"/>
+  ${back?hair:""}
+  <path d="M10 64c0-12 10-17 22-17s22 5 22 17z" fill="${a.shirt}"/>
+  <rect x="27" y="40" width="10" height="10" rx="3" fill="${a.skin}"/>
+  <ellipse cx="32" cy="31" rx="13" ry="15" fill="${a.skin}"/>
+  ${back?(a.style==="long"?`<path d="M19 28c2-9 8-12 13-12s11 3 13 12c-6-4-10-6-13-6s-7 2-13 6z" fill="${a.hair}"/>`:""):hair}
+  <circle cx="27" cy="31" r="1.7" fill="#2B2A33"/><circle cx="37" cy="31" r="1.7" fill="#2B2A33"/>
+  <path d="M27 37q5 4 10 0" stroke="#2B2A33" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
+}
+
+/* ---------- Telas ---------- */
+function show(id){ ["home","play","end"].forEach(x=>$(x).classList.toggle("hidden",x!==id)); try{ window.scrollTo(0,0); $("app").scrollIntoView(true); }catch(e){} }
+
+function renderHome(){
+  const list = $("sceneList"); list.innerHTML="";
+  SCENES.forEach((s,i)=>{
+    const b = best[s.id]||0;
+    const el = document.createElement("button");
+    el.className="scene-card";
+    el.innerHTML = `<div class="avatar">${avatar(s.avatar)}</div>
+      <div style="flex:1;min-width:0"><div class="where" style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:700">Capítulo ${i+1} · ${s.day}</div><div class="who">${s.name} <span style="font-weight:400;color:var(--soft)">· ${s.role}</span></div>
+      <div class="where">${s.place}</div>
+      <div class="meter"><i style="width:${b/6*100}%"></i></div>
+      <div class="meter-label">${b?("Melhor resultado: "+b+" de 6"):"Ainda não jogada"}</div></div>`;
+    el.addEventListener("click",()=>{ sfx.tap(); startScene(i); });
+    list.appendChild(el);
+  });
+  const nx = SCENES.findIndex(s=>!(s.id in best));
+  const sb = $("storyBtn");
+  sb.textContent = nx===0?"Começar a semana":nx<0?"Reler desde segunda":"Continuar: "+SCENES[nx].day.toLowerCase();
+  sb.onclick = ()=>{ sfx.tap(); startScene(nx<0?0:nx); };
+  show("home");
+}
+function addNarr(text,cls){
+  const n=document.createElement("div"); n.className="narr"+(cls?" "+cls:""); n.textContent=text;
+  $("chat").appendChild(n); scrollDown();
+}
+
+function isAct(t){ return t.charAt(0)==="("; }
+function clean(t){ return isAct(t)?t.slice(1,-1):t; }
+function addMsg(text,me,s){
+  const m = document.createElement("div");
+  m.className="msg"+(me?" me":"");
+  m.innerHTML = (me?"":`<div class="avatar sm">${avatar(s.avatar)}</div>`)+`<div class="bubble${isAct(text)?" act":""}"></div>`;
+  m.querySelector(".bubble").textContent = clean(text);
+  $("chat").appendChild(m); scrollDown(); return m;
+}
+function addTyping(s){
+  const m = document.createElement("div"); m.className="msg typing";
+  m.innerHTML = `<div class="avatar sm">${avatar(s.avatar)}</div><div class="bubble"><span></span><span></span><span></span></div>`;
+  $("chat").appendChild(m); scrollDown(); return m;
+}
+function scrollDown(){ requestAnimationFrame(()=>{ try{ $("panel").scrollIntoView(false); }catch(e){} }); }
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+async function npcSay(text,s,token){
+  const ty = addTyping(s);
+  await wait(isAct(text)?700:Math.min(1500,500+text.length*12));
+  ty.remove();
+  if(token!==runToken) return false;
+  addMsg(text,false,s);
+  if(!isAct(text)) voice(s.voice,text);
+  return true;
+}
+function setMeter(){
+  const v = cur.best.reduce((a,b)=>a+b,0);
+  $("meterFill").style.width = (v/6*100)+"%";
+  $("meterBar").setAttribute("aria-valuenow",v);
+  const mn = SCENES[cur.s].meter||"Conexão";
+  $("meterLabel").textContent = mn+": "+v+" de 6";
+  $("meterBar").setAttribute("aria-label",mn);
+}
+
+let runToken = 0;
+function startScene(i){
+  const s = SCENES[i];
+  runToken++;
+  cur = {s:i,t:0,best:[0,0,0],tried:new Set(),picks:[]};
+  $("headAvatar").innerHTML = avatar(s.avatar);
+  $("headName").textContent = s.name;
+  $("headPlace").textContent = s.place;
+  $("chat").innerHTML = `<div class="chapter">Capítulo ${i+1} · ${s.day}</div>`;
+  addNarr(s.intro);
+  $("panel").innerHTML="";
+  setMeter(); show("play");
+  playTurn();
+}
+
+async function playTurn(){
+  const s = SCENES[cur.s], turn = s.turns[cur.t], token = runToken;
+  cur.tried = new Set();
+  $("panel").innerHTML="";
+  if(cur.t===0) await wait(900);
+  if(!(await npcSay(turn.say,s,token))) return;
+  await wait(500); if(token!==runToken) return;
+  addNarr(s.think[cur.t],"think");
+  showOptions();
+}
+
+function showOptions(){
+  const s = SCENES[cur.s], turn = s.turns[cur.t], p = $("panel");
+  p.innerHTML = `<div class="hint">O que você responde?</div>`;
+  turn.opts.forEach((o,idx)=>{
+    const b = document.createElement("button");
+    b.className="opt"+(isAct(o.t)?" act":"");
+    b.textContent = clean(o.t);
+    if(cur.tried.has(idx)){ b.disabled = true; }
+    else b.addEventListener("click",()=>choose(idx));
+    p.appendChild(b);
+  });
+  scrollDown();
+}
+
+async function choose(idx){
+  const s = SCENES[cur.s], turn = s.turns[cur.t], o = turn.opts[idx], token = runToken;
+  sfx.tap();
+  cur.tried.add(idx);
+  cur.picks.push({turn:cur.t,k:o.k,t:o.t});
+  $("panel").innerHTML="";
+  addMsg(o.t,true,s);
+  await wait(350);
+  if(!(await npcSay(o.r,s,token))) return;
+  await wait(450);
+  if(token!==runToken) return;
+  cur.best[cur.t] = Math.max(cur.best[cur.t],KIND[o.k].pts);
+  setMeter(); sfx[o.k]();
+  const fb = document.createElement("div");
+  fb.className="fb "+o.k;
+  fb.innerHTML = `<div class="tag ${o.k}">${(s.labels&&s.labels[o.k])||KIND[o.k].label}</div><p></p>`;
+  fb.querySelector("p").textContent = o.fb;
+  $("chat").appendChild(fb);
+
+  const p = $("panel"), row = document.createElement("div"); row.className="btn-row";
+  const last = cur.t===s.turns.length-1;
+  const canRetry = o.k!=="go" && cur.tried.size<turn.opts.length;
+  if(canRetry){
+    const r = document.createElement("button"); r.className="btn ghost"; r.textContent="Tentar outra frase";
+    r.addEventListener("click",()=>{ sfx.tap();
+      const mk=document.createElement("div"); mk.className="retry-mark"; mk.textContent="Outra tentativa";
+      $("chat").appendChild(mk); showOptions(); });
+    row.appendChild(r);
+  }
+  const n = document.createElement("button"); n.className="btn"; n.textContent = last?"Ver resumo":"Continuar";
+  n.addEventListener("click",()=>{ sfx.tap(); if(last) endScene(); else { cur.t++; playTurn(); } });
+  row.appendChild(n); p.appendChild(row);
+  scrollDown();
+}
+
+function endScene(){
+  const s = SCENES[cur.s], total = cur.best.reduce((a,b)=>a+b,0);
+  best[s.id] = Math.max(best[s.id]||0,total); saveBest();
+  const lastCh = cur.s===SCENES.length-1;
+  const c = {go:0,mid:0,stop:0}; cur.picks.forEach(p=>c[p.k]++);
+  const moved = cur.picks.filter(p=>p.k==="go"), stuck = cur.picks.filter(p=>p.k==="stop");
+  const tips = s.endBox||{h:"O que costuma manter uma conversa viva",items:[
+    ["Responder e acrescentar um detalhe","\"Fiquei em casa\" vira \"fiquei em casa e fiz um macarrão que deu errado\"."],
+    ["Devolver uma pergunta","De preferência sobre algo que a pessoa acabou de dizer."],
+    ["Usar o que está em volta","O café, a comida da festa, a caixa de mudança."],
+    ["Dizer como você é, em tom leve","\"Eu sou de falar pouco\" apresenta você. Um pedido de desculpas tira você da conversa."]]};
+  const title = s.endTitle?s.endTitle:total>=5?"A conversa fluiu.":total>=3?"A conversa aconteceu.":"Você ficou até o fim.";
+  const sub = s.endSub?s.endSub:total>=5?`${s.name} saiu dessa conversa sabendo um pouco mais sobre você.`:
+              total>=3?`Teve momentos em que ${s.name} ganhou assunto e momentos em que faltou gancho.`:
+              `Várias respostas fecharam a porta, e mesmo assim você continuou. Vale jogar de novo e testar outras frases.`;
+  const li = a => a.map(p=>`<li>${esc(clean(p.t))}</li>`).join("");
+  const e = $("end");
+  e.innerHTML = `<div class="top" style="padding:12px 0"><button class="icon-btn" id="homeBtn">← Início</button></div>
+    <div class="chapter" style="text-align:left">Fim do capítulo ${cur.s+1} · ${s.day}</div>
+    <p class="story" style="margin-bottom:16px">${esc(total>=4?s.hi:s.lo)}</p>
+    <div class="avatar">${avatar(s.avatar)}</div>
+    <h2>${title}</h2><p class="sub">${sub}</p>
+    <div class="box"><h3>${s.meter?s.meter+" na conversa":"Conexão com "+s.name}: ${total} de 6</h3>
+      <div class="meter"><i style="width:${total/6*100}%"></i></div>
+      <div class="counts" style="margin-top:12px">
+        <span class="tag go">▲ ${s.meter?"Boa frase":"Andou"}: ${c.go}</span><span class="tag mid">● Morna: ${c.mid}</span><span class="tag stop">■ Travou: ${c.stop}</span>
+      </div></div>
+    ${moved.length?`<div class="box"><h3>${s.meter?"Boas frases que você usou":"Frases suas que fizeram a conversa andar"}</h3><ul>${li(moved)}</ul></div>`:""}
+    ${stuck.length?`<div class="box"><h3>${s.meter?"Frases em que você recuou ou se culpou":"Frases que travaram"}</h3><ul>${li(stuck)}</ul><p style="font-size:13px;color:var(--soft);margin-top:10px">Se alguma delas parece com o que você costuma dizer, vale levar para a terapia.</p></div>`:""}
+    <div class="box"><h3>${tips.h}</h3><ul>${tips.items.map(x=>`<li>${esc(x[0])}<small>${esc(x[1])}</small></li>`).join("")}</ul></div>
+    <div class="btn-row"><button class="btn ghost" id="againBtn">Jogar de novo</button><button class="btn" id="nextBtn">${lastCh?"Fim da semana":"Próximo capítulo"}</button></div>`;
+  $("homeBtn").addEventListener("click",()=>{sfx.tap();renderHome();});
+  $("againBtn").addEventListener("click",()=>{sfx.tap();startScene(cur.s);});
+  $("nextBtn").addEventListener("click",()=>{sfx.tap(); if(lastCh) epilogue(); else startScene(cur.s+1);});
+  show("end"); sfx.end();
+}
+function epilogue(){
+  const tot = SCENES.reduce((a,s)=>a+(best[s.id]||0),0);
+  $("end").innerHTML = `<div class="top" style="padding:12px 0"><button class="icon-btn" id="homeBtn">← Início</button></div>
+    <div class="chapter" style="text-align:left">Epílogo</div>
+    <h2>A semana acabou.</h2>
+    ${EPILOGUE.map(t=>`<p class="story">${esc(t)}</p>`).join("")}
+    <div class="box" style="margin-top:18px"><h3>Sua semana: ${tot} de ${SCENES.length*6}</h3>
+      <ul>${SCENES.map(s=>`<li>${s.day} · ${s.name}<small>${s.meter||"Conexão"}: ${best[s.id]||0} de 6</small></li>`).join("")}</ul></div>
+    <button class="btn" id="homeBtn2">Voltar ao início</button>`;
+  $("homeBtn").addEventListener("click",()=>{sfx.tap();renderHome();});
+  $("homeBtn2").addEventListener("click",()=>{sfx.tap();renderHome();});
+  show("end"); sfx.end();
+}
+function esc(t){ return t.replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch])); }
+
+/* ---------- Início ---------- */
+$("soundBtn").addEventListener("click",toggleSound);
+$("soundBtn2").addEventListener("click",toggleSound);
+$("backBtn").addEventListener("click",()=>{ runToken++; renderHome(); });
+paintSound(); renderHome();
+</script>
+</body>
+</html>
